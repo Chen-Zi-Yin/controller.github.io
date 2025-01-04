@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>紀錄</title>
+    <link rel="stylesheet" href="record.css">
+</head>
+<body>
+    <div class="phone">
+        <!-- 頂部狀態欄 -->
+        <div class="status-bar">
+            <div class="left">
+                <span class="time">14:30</span>
+            </div>
+            <div class="right">
+                <span class="signal">📶</span>
+                <span class="wifi">📡</span>
+                <span class="battery">🔋</span>
+            </div>
+        </div>
+
+         <!-- 頂部導航欄 -->
+         <div class="nav-header">
+            <a href="finger.html" class="back-btn">
+                <span class="icon"><img src="./img/img1.png" alt="back"></span>
+            </a>
+            <h2>紀錄</h2>
+            <a href="record.html" class="record-btn">
+                <span><img src="./img/img2.png" alt="record"></span>
+            </a>
+        </div>
+
+
+        <div class="content">
+            <div class="chart-box">
+                <div class="semi-circle-chart">
+                    <div class="chart-content">
+                        <div class="chart-value">0%</div>
+                        <div class="chart-label">本月使用率</div>
+                    </div>
+                </div>
+                <div class="chart-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">0次</div>
+                        <div class="stat-label">本月次數</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">0小時</div>
+                        <div class="stat-label">本月時數</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="record-box">
+                <div class="record-header">
+                    <h2>使用紀錄</h2>
+                    <select id="monthSelect">
+                        <option value="1-2">1月-2月 </option>
+                        <option value="3-4">3月-4月 </option>
+                        <option value="5-6" selected>5月-6月 </option>
+                        <option value="7-8">7月-8月 </option>
+                        <option value="9-10">9月-10月 </option>
+                        <option value="11-12">11月-12月 </option>
+                    </select>
+                </div>
+                <table class="record-table">
+                    <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>開始時間</th>
+                            <th>結束時間</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recordBody">
+                        <!-- 記錄將由 JavaScript 動態添加 -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="stats-box">
+                <div class="stats-header">
+                    <h2>使用統計</h2>
+                </div>
+                <div class="stats-content">
+                    <div class="stats-item">
+                        <span class="stats-label">使用次數</span>
+                        <span class="stats-value" id="usageCount">0次</span>
+                    </div>
+                    <div class="stats-item">
+                        <span class="stats-label">總使用時數</span>
+                        <span class="stats-value" id="totalHours">0小時</span>
+                    </div>
+                    <div class="stats-item">
+                        <span class="stats-label">血壓記錄</span>
+                        <span class="stats-value">--</span>
+                    </div>
+                    <div class="stats-item">
+                        <span class="stats-label">康復進度</span>
+                        <div class="progress-bar">
+                            <div class="progress" id="recoveryProgress"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    // 生成隨機時間
+    function generateRandomTime() {
+        const hours = String(Math.floor(Math.random() * 14) + 8).padStart(2, '0'); // 8:00 - 22:00
+        const minutes = String(Math.floor(Math.random() * 4) * 15).padStart(2, '0'); // 00, 15, 30, 45
+        return hours + ':' + minutes;
+    }
+
+    // 生成隨機記錄
+    function generateRecords(monthPair) {
+        const records = [];
+        const [startMonth, endMonth] = monthPair.split('-').map(Number);
+        const count = Math.floor(Math.random() * 3) + 10; // 改為 5-7 條記錄
+
+        for (let i = 0; i < count; i++) {
+            const month = Math.random() < 0.5 ? startMonth : endMonth;
+            const day = Math.floor(Math.random() * 28) + 1;
+            const startTime = generateRandomTime();
+            const endHour = parseInt(startTime.split(':')[0]) + 1;
+            const endTime = `${String(endHour).padStart(2, '0')}:${startTime.split(':')[1]}`;
+
+            records.push({
+                date: `2024. ${String(month).padStart(2, '0')}. ${String(day).padStart(2, '0')}`,
+                startTime,
+                endTime
+            });
+        }
+
+        return records.sort((a, b) => new Date(a.date) - new Date(b.date));
+    }
+
+    // 更新表格內容
+    function updateTable(monthPair) {
+        const records = generateRecords(monthPair);
+        const recordBody = document.getElementById('recordBody');
+        recordBody.innerHTML = '';
+        
+        records.forEach(record => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${record.date}</td>
+                <td>${record.startTime}</td>
+                <td>${record.endTime}</td>
+            `;
+            recordBody.appendChild(row);
+        });
+
+        // 更新使用統計
+        updateStats(records);
+    }
+
+    // 更新圖表和統計數據
+    function updateStats(records) {
+        // 計算本月使用率
+        const daysInMonth = 30;
+        const usageDays = new Set(records.map(record => record.date.split('.')[2])).size;
+        const usageRate = Math.round((usageDays / daysInMonth) * 100);
+
+        // 更新半圓圖
+        const semiCircle = document.querySelector('.semi-circle-chart');
+        semiCircle.style.setProperty('--percentage', usageRate + '%');
+        document.querySelector('.chart-value').textContent = usageRate + '%';
+
+        // 更新本月統計
+        const monthlyCount = records.length;
+        let totalMinutes = 0;
+        records.forEach(record => {
+            const startTime = record.startTime.split(':').map(Number);
+            const endTime = record.endTime.split(':').map(Number);
+            const duration = (endTime[0] - startTime[0]) * 60 + (endTime[1] - startTime[1]);
+            totalMinutes += duration;
+        });
+        
+        const totalHours = Math.floor(totalMinutes / 60);
+        
+        // 更新統計數值
+        document.querySelector('.chart-stats .stat-item:first-child .stat-value').textContent = 
+            monthlyCount + '次';
+        document.querySelector('.chart-stats .stat-item:last-child .stat-value').textContent = 
+            totalHours + '小時';
+
+        // 更新原有的統計區域
+        document.getElementById('usageCount').textContent = `${monthlyCount}次`;
+        document.getElementById('totalHours').textContent = `${totalHours}小時`;
+
+        // 更新康復進度
+        const progress = Math.min(usageRate, 100);
+        const progressBar = document.getElementById('recoveryProgress');
+        progressBar.style.width = `${progress}%`;
+    }
+
+    // 監聽下拉選單變化
+    document.getElementById('monthSelect').addEventListener('change', (e) => {
+        updateTable(e.target.value);
+    });
+
+    // 初始化表格
+    updateTable('5-6');
+});
+    </script>
+</body>
+</html>

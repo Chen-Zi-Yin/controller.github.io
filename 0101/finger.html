@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>操控手指介面</title>
+    <link rel="stylesheet" href="finger.css">
+</head>
+<body>
+    <div class="phone">
+        <!-- 頂部狀態欄 -->
+        <div class="status-bar">
+            <div class="left">
+                <span class="time">14:30</span>
+            </div>
+            <div class="right">
+                <span class="signal">📶</span>
+                <span class="wifi">📡</span>
+                <span class="battery">🔋</span>
+            </div>
+        </div>
+
+        <!-- 頂部導航欄 -->
+        <div class="nav-header">
+            <a href="search.html" class="back-btn">
+                <span class="icon"><img src="./img/img1.png" alt="back"></span>
+            </a>
+            <h2>掌控者</h2>
+            <a href="record.html" class="record-btn">
+                <span><img src="./img/img2.png" alt="record"></span>
+            </a>
+        </div>
+
+        <!-- 在頂部導航欄下方添加連接狀態和取消選取按鈕 -->
+        <div class="connection-status">
+            連接中
+        </div>
+        <button class="reset-btn">
+            <span>取消選取</span>
+        </button>
+
+        <!-- 手部選擇器 -->
+        <div class="hand-selector">
+            <button class="active" data-hand="left">左手</button>
+            <button data-hand="right">右手</button>
+        </div>
+
+        <!-- 手部圖片顯示區域 -->
+        <div class="hand-display">
+            <img src="./img/img3.png" alt="手部姿勢" class="hand-image">
+        </div>
+
+        <!-- 控制按鈕區域 -->
+        <div class="control-buttons">
+            <div class="basic-actions">
+                <button class="control-btn" data-action="fist">
+                    <span class="icon">✊</span>
+                    <span class="text">握拳</span>
+                </button>
+                <button class="control-btn" data-action="stretch">
+                    <span class="icon">🖐</span>
+                    <span class="text">伸展</span>
+                </button>
+                <button class="control-btn" data-action="grab">
+                    <span class="icon">👊</span>
+                    <span class="text">抓取</span>
+                </button>
+            </div>
+            <a href="custom.html" class="control-btn custom">
+                <span class="icon">⚙️</span>
+                <span class="text">自定</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const handImage = document.querySelector('.hand-image');
+            const handButtons = document.querySelectorAll('.hand-selector button');
+            const controlButtons = document.querySelectorAll('.basic-actions .control-btn');
+            const resetButton = document.querySelector('.reset-btn');
+            let currentHand = 'left';
+            let currentAction = 'standby';
+
+            // 圖片映射表
+            const imageMap = {
+                'left': {
+                    'standby': './img/left-standby.png',
+                    'fist': './img/left-fist.png',
+                    'stretch': './img/left-stretch.png',
+                    'grab': './img/left-grab.png'
+                },
+                'right': {
+                    'standby': './img/right-standby.png',
+                    'fist': './img/right-fist.png',
+                    'stretch': './img/right-stretch.png',
+                    'grab': './img/right-grab.png'
+                }
+            };
+
+            // 切換左右手
+            handButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    handButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    currentHand = this.dataset.hand;
+                    updateHandImage();
+                });
+            });
+
+            // 控制按鈕點擊事件
+            controlButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 移除其他按鈕的激活狀態
+                    controlButtons.forEach(btn => btn.classList.remove('active'));
+                    // 添加當前按鈕的激活狀態
+                    this.classList.add('active');
+                    currentAction = this.dataset.action;
+                    updateHandImage();
+                });
+            });
+
+            // 取消選取按鈕事件
+            resetButton.addEventListener('click', function() {
+                controlButtons.forEach(btn => btn.classList.remove('active'));
+                currentAction = 'standby';
+                updateHandImage();
+            });
+
+            // 更新手部圖片
+            function updateHandImage() {
+                const imagePath = imageMap[currentHand][currentAction];
+                handImage.src = imagePath;
+            }
+
+            // 初始化圖片
+            updateHandImage();
+        });
+    </script>
+</body>
+</html>

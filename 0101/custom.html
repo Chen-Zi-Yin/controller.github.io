@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定義手勢</title>
+    <link rel="stylesheet" href="custom.css">
+</head>
+<body>
+    <div class="phone">
+        <!-- 頂部狀態欄 -->
+        <div class="status-bar">
+            <div class="left">
+                <span class="time">14:30</span>
+            </div>
+            <div class="right">
+                <span class="signal">📶</span>
+                <span class="wifi">📡</span>
+                <span class="battery">🔋</span>
+            </div>
+        </div>
+
+        <!-- 頂部導航欄 -->
+        <div class="nav-header">
+            <a href="finger.html" class="back-btn">
+                <span class="icon"><img src="./img/img1.png" alt="back"></span>
+            </a>
+            <h2>自定義手勢</h2>
+            <a href="record.html" class="record-btn">
+                <span><img src="./img/img2.png" alt="record"></span>
+            </a>
+        </div>
+
+        <!-- 在 nav-header 後添加選擇模式按鈕 -->
+        <div class="selection-mode">
+            <button class="mode-btn active" data-mode="individual">個別選取</button>
+            <button class="mode-btn" data-mode="all">全選</button>
+        </div>
+
+        <!-- 手部圖片顯示區域 -->
+        <div class="hand-display">
+            <div class="interaction-points">
+                <!-- 大拇指的互動點 -->
+                <div class="point" data-finger="thumb" style="top: 53%; left: 93%;">
+                    <div class="point-dot"></div>
+                </div>
+                <div class="point" data-finger="thumb" style="top: 66%; left: 82%;">
+                    <div class="point-dot"></div>
+                </div>
+                <!-- 其他手指的互動點 -->
+                <!-- 無名指 -->
+                <div class="point" data-finger="index" style="top: 19%; left: 32%;">
+                    <div class="point-dot"></div>
+                </div>
+                <div class="point" data-finger="index" style="top: 29%; left: 34%;">
+                    <div class="point-dot"></div>
+                </div>
+                <div class="point" data-finger="index" style="top: 40%; left: 36%;">
+                    <div class="point-dot"></div>
+                </div>
+                <!-- 中指 -->
+                <div class="point" data-finger="middle" style="top: 13%; left: 50%;">
+                    <div class="point-dot"></div>
+                </div>
+                <div class="point" data-finger="middle" style="top: 25%; left: 50%;">
+                    <div class="point-dot"></div>
+                </div>
+                <div class="point" data-finger="middle" style="top: 38%; left: 50%;">
+                    <div class="point-dot"></div>
+                </div>
+                <!-- 食指 -->
+                <div class="point" data-finger="ring" style="top: 19%; left: 72%;">
+                    <div class="point-dot"></div>
+                </div>
+                <div class="point" data-finger="ring" style="top: 30%; left: 68%;">
+                    <div class="point-dot"></div>
+                </div>
+                <div class="point" data-finger="middle" style="top: 42%; left: 65%;">
+                    <div class="point-dot"></div>
+                </div>
+                <!-- 小指 -->
+                <div class="point" data-finger="pinky" style="top: 31%; left: 14%;">
+                    <div class="point-dot"></div>
+                </div>
+                <div class="point" data-finger="middle" style="top: 39%; left: 19%;">
+                    <div class="point-dot"></div>
+                </div>
+                <div class="point" data-finger="pinky" style="top: 47%; left: 22%;">
+                    <div class="point-dot"></div>
+                </div>
+            </div>
+            <img src="./img/left-hand-diagram.png" alt="手部示意圖" class="hand-image">
+        </div>
+
+        <!-- 滑動控制區域 -->
+        <div class="slider-control">
+            <div class="slider-header">
+                <button class="select-all-btn">全選</button>
+            </div>
+            <div class="slider-labels">
+                <span>彎曲</span>
+                <span>伸展</span>
+            </div>
+            <div class="slider-container">
+                <input type="range" min="0" max="100" value="50" class="slider">
+            </div>
+        </div>
+
+        <!-- 互動點的彈窗 -->
+        <div class="point-modal" id="pointModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>調整控制點</h3>
+                    <button class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="slider-container">
+                        <div class="slider-labels">
+                            <span>彎曲</span>
+                            <span>伸展</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="50" class="modal-slider">
+                        <div class="slider-value">50%</div>
+                    </div>
+                    <button class="save-btn">保存</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 注意事項 -->
+        <div class="notice">
+            <div class="notice-item">
+                <span class="text">選擇要操控的手指</span>
+            </div>
+        </div>
+
+        <!-- 底部按鈕區域 -->
+        <div class="bottom-buttons">
+            <button class="save-all-btn">儲存</button>
+            <button class="reset-btn">重置</button>
+        </div>
+
+        <!-- 添加保存確認彈窗 -->
+        <div class="modal" id="saveConfirmModal">
+            <div class="modal-content">
+                <p>是否確定保存？</p>
+                <div class="modal-buttons">
+                    <button class="modal-btn cancel">取消</button>
+                    <button class="modal-btn confirm">確定</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 修改重置確認彈窗 -->
+        <div class="modal" id="resetModal">
+            <div class="modal-content">
+                <p>是否確定重置？</p>
+                <div class="modal-buttons">
+                    <button class="modal-btn cancel">取消</button>
+                    <button class="modal-btn confirm">確定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const points = document.querySelectorAll('.point');
+            const pointModal = document.getElementById('pointModal');
+            const saveConfirmModal = document.getElementById('saveConfirmModal');
+            const modeBtns = document.querySelectorAll('.mode-btn');
+            const sliderControl = document.querySelector('.slider-control');
+            
+            // 模式切換
+            modeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    modeBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    if (this.dataset.mode === 'individual') {
+                        sliderControl.classList.add('disabled');
+                        points.forEach(p => p.classList.remove('disabled'));
+                    } else {
+                        sliderControl.classList.remove('disabled');
+                        points.forEach(p => p.classList.add('disabled'));
+                    }
+                });
+            });
+
+            // 互動點點擊處理
+            points.forEach(point => {
+                point.addEventListener('click', function() {
+                    if (this.classList.contains('disabled')) return;
+                    
+                    // 移除其他點的 active 狀態
+                    points.forEach(p => p.classList.remove('active'));
+                    // 設置當前點的 active 狀態
+                    this.classList.add('active');
+                    
+                    pointModal.style.display = 'block';
+                });
+            });
+
+            // 保存按鈕點擊處理
+            document.querySelector('.save-btn').addEventListener('click', function() {
+                const pointModal = document.getElementById('pointModal');
+                const activePoint = document.querySelector('.point.active');
+                
+                if (activePoint) {
+                    // 保存點的狀態
+                    activePoint.classList.add('saved');
+                    // 更改點的顏色為綠色
+                    const dot = activePoint.querySelector('.point-dot');
+                    dot.style.background = 'var(--accent-color)';
+                    dot.style.boxShadow = '0 0 0 2px var(--accent-color)';
+                }
+                
+                pointModal.style.display = 'none';
+                
+                // 保存數值
+                const sliderValue = document.querySelector('.modal-slider').value;
+                localStorage.setItem('pointValue_' + activePoint.dataset.finger, sliderValue);
+            });
+
+            // 確認保存
+            saveConfirmModal.querySelector('.confirm').addEventListener('click', function() {
+                const activePoint = document.querySelector('.point.active');
+                if (activePoint) {
+                    activePoint.classList.add('saved');
+                }
+                saveConfirmModal.style.display = 'none';
+                pointModal.style.display = 'none';
+                
+                // 延遲一下再跳轉，讓用戶看到保存效果
+                setTimeout(() => {
+                    window.location.href = 'custom.html'; // 跳回自定義頁面
+                }, 300);
+            });
+
+            // 關閉彈窗
+            document.querySelectorAll('.close-btn, .modal-btn.cancel').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    pointModal.style.display = 'none';
+                    saveConfirmModal.style.display = 'none';
+                });
+            });
+
+            // 重置按鈕點擊處理
+            const resetBtn = document.querySelector('.reset-btn');
+            resetBtn.addEventListener('click', function() {
+                const resetModal = document.getElementById('resetModal');
+                resetModal.style.display = 'flex';
+            });
+
+            // 儲存按鈕點擊處理
+            const saveAllBtn = document.querySelector('.save-all-btn');
+            saveAllBtn.addEventListener('click', function() {
+                const saveConfirmModal = document.getElementById('saveConfirmModal');
+                saveConfirmModal.style.display = 'flex';
+            });
+
+            // 確保彈窗正常顯示和關閉
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.style.display = 'none';
+                    }
+                });
+            });
+
+            // 取消按鈕處理
+            document.querySelectorAll('.modal-btn.cancel').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.closest('.modal').style.display = 'none';
+                });
+            });
+
+            // 添加滑動條值的顯示
+            const modalSlider = document.querySelector('.modal-slider');
+            modalSlider.addEventListener('input', function() {
+                const sliderValue = document.querySelector('.slider-value');
+                sliderValue.textContent = this.value + '%';
+            });
+
+            // 修改重置確認邏輯
+            resetModal.querySelector('.confirm').addEventListener('click', function() {
+                // 重置所有點的狀態
+                points.forEach(point => {
+                    point.classList.remove('saved');
+                    const dot = point.querySelector('.point-dot');
+                    dot.style.background = 'white';
+                    dot.style.boxShadow = '0 0 0 2px var(--primary-color)';
+                    
+                    // 清除保存的數值
+                    localStorage.removeItem('pointValue_' + point.dataset.finger);
+                });
+                resetModal.style.display = 'none';
+            });
+
+            // 修改保存按鈕點擊處理
+            document.querySelector('.save-all-btn').addEventListener('click', function() {
+                const saveConfirmModal = document.getElementById('saveConfirmModal');
+                saveConfirmModal.style.display = 'flex';
+            });
+
+            // 確認保存
+            saveConfirmModal.querySelector('.confirm').addEventListener('click', function() {
+                // 在這裡添加保存邏輯
+                points.forEach(point => {
+                    if (point.classList.contains('saved')) {
+                        const dot = point.querySelector('.point-dot');
+                        dot.style.background = '#00ffbb';
+                        dot.style.boxShadow = '0 0 0 2px #00ffbb';
+                    }
+                });
+                saveConfirmModal.style.display = 'none';
+            });
+
+            // 取消保存
+            saveConfirmModal.querySelector('.cancel').addEventListener('click', function() {
+                saveConfirmModal.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

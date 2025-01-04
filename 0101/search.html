@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜尋裝置</title>
+    <link rel="stylesheet" href="search.css">
+</head>
+<body>
+    <div class="phone">
+        <!-- 頂部狀態欄 -->
+        <div class="status-bar">
+            <div class="left">
+                <span class="time">14:30</span>
+            </div>
+            <div class="right">
+                <span class="signal">📶</span>
+                <span class="wifi">📡</span>
+                <span class="battery">🔋</span>
+            </div>
+        </div>
+
+        <!-- 產品名稱 -->
+        <div class="product-title">掌控者</div>
+
+        <!-- 連接按鈕 -->
+        <div class="connect-container">
+            <button class="connect-button">
+                <span class="button-circle"></span>
+                <span class="button-text">點擊連接裝置</span>
+            </button>
+        </div>
+
+        <!-- 搜索動畫區域 -->
+        <div class="search-container" style="display: none;">
+            <div class="search-animation">
+                <!-- 搜索中的動畫 -->
+                <div class="searching"></div>
+                <!-- 成功動畫 -->
+                <div class="circle-animation" style="display: none;">
+                    <svg class="circle-check" viewBox="0 0 50 50">
+                        <circle class="circle" cx="25" cy="25" r="20"/>
+                        <path class="check" d="M15 25 L22 32 L35 18"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="search-text">正在搜索裝置...</div>
+            <div class="success-message">連接成功！</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const connectButton = document.querySelector('.connect-button');
+            const connectContainer = document.querySelector('.connect-container');
+            const searchContainer = document.querySelector('.search-container');
+            const searchText = document.querySelector('.search-text');
+            const successMessage = document.querySelector('.success-message');
+            const searching = document.querySelector('.searching');
+            const circleAnimation = document.querySelector('.circle-animation');
+            const circleCheck = document.querySelector('.circle-check');
+            
+            connectButton.addEventListener('click', function() {
+                // 隱藏連接按鈕
+                connectContainer.style.display = 'none';
+                // 顯示搜索容器
+                searchContainer.style.display = 'block';
+                // 確保搜索動畫顯示
+                searching.style.display = 'block';
+                // 確保成功動畫一開始是隱藏的
+                circleAnimation.style.display = 'none';
+                
+                // 3秒後顯示成功動畫
+                setTimeout(() => {
+                    // 隱藏搜索動畫
+                    searching.style.display = 'none';
+                    // 顯示成功動畫容器
+                    circleAnimation.style.display = 'block';
+                    // 添加動畫類
+                    circleCheck.classList.add('animate');
+                    // 隱藏搜索文字
+                    searchText.style.display = 'none';
+                    // 顯示成功文字
+                    successMessage.style.display = 'block';
+                    
+                    // 1.5秒後跳轉
+                    setTimeout(() => {
+                        window.location.href = 'finger.html';
+                    }, 1500);
+                }, 3000);
+            });
+        });
+    </script>
+</body>
+</html>
