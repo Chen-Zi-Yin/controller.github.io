@@ -92,9 +92,10 @@ body {
 /* 手部圖片顯示區域調整 */
 .hand-display {
     position: relative;
-    width: 100%;
+    width: 85%;
     height: 45vh;
-    margin-top: 60px;
+    margin-top: 65px;
+    margin-left: 35px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -233,7 +234,7 @@ body {
 /* 移除重複的滑動條樣式，統一使用這個 */
 .slider-container {
     padding: 0;
-    margin: 20px 0;
+    margin: -10px 0;
     width: 100%;
 }
 
@@ -366,7 +367,7 @@ h2{
     position: relative;
     padding: 30px 20px;
     margin: 20px;
-    margin-top: 40px;
+    margin-top: 10px;
     background: rgba(168, 209, 255, 0.1);
     border-radius: 15px;
     backdrop-filter: blur(5px);
