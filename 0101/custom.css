@@ -80,7 +80,7 @@ body {
     padding: 10px 20px;
     background: rgba(168, 209, 255, 0.1);
     backdrop-filter: blur(5px);
-    height: 55px;
+    height: 65px;
 }
 
 .back-btn img, .record-btn img {
